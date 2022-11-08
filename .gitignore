@@ -1,0 +1,5 @@
+# ignore mnist db
+*.csv
+
+# ignore compiled files
+*.out

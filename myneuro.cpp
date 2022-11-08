@@ -12,14 +12,14 @@ myNeuro::myNeuro()
     //---set layer count for NN,
     //---where input neuerons for first layer equal NN input
     //---and output neuerons for last layer equal NN output
-//    _nlCount = 2;
-//    _nList = new vector<nnLay>(_nlCount);
+   _nlCount = 2;
+   _nList = new vector<nnLay>(_nlCount);
 
-//    //--- set input and output array size for every layer
-//    //--- where first layer have "NN input" input size
-//    //--- and last layer have "NN output" output size
-//    _nList->at(0).setIO(_inputNeurons,200);
-//    _nList->at(1).setIO(200,_outputNeurons);
+   //--- set input and output array size for every layer
+   //--- where first layer have "NN input" input size
+   //--- and last layer have "NN output" output size
+   _nList->at(0).setIO(_inputNeurons,200);
+   _nList->at(1).setIO(200,_outputNeurons);
 
 
     //--------- examples for more layer
@@ -34,13 +34,13 @@ myNeuro::myNeuro()
         _nList -> at(2).setIO(60, _outputNeurons);*/
 
     //------- examples for more layer
-    _nlCount = 4;
-        _nList = new vector<nnLay>(_nlCount);
+    // _nlCount = 4;
+    //     _nList = new vector<nnLay>(_nlCount);
 
-        _nList -> at(0).setIO(_inputNeurons, 200);
-        _nList -> at(1).setIO(200, 60);
-        _nList -> at(2).setIO(60, 40);
-       _nList -> at(3).setIO(40, _outputNeurons);
+    //     _nList -> at(0).setIO(_inputNeurons, 200);
+    //     _nList -> at(1).setIO(200, 60);
+    //     _nList -> at(2).setIO(60, 40);
+    //    _nList -> at(3).setIO(40, _outputNeurons);
 
 }
 
@@ -64,7 +64,7 @@ myNeuro::~myNeuro()
     }
 }
 
-void myNeuro::feedForwarding(bool ok)
+int myNeuro::feedForwarding(bool ok)
 {
     //--- signal through NN in forward direction
 
@@ -79,17 +79,25 @@ void myNeuro::feedForwarding(bool ok)
     if (!ok)
     {
         cout<<"Feed Forward: "<<endl;
+        float max = 0;
+        int guess = 0;
         for(int out =0; out < _outputNeurons; out++)
         {
+            if (_nList->at(_nlCount-1).hidden[out] > max)
+            {
+                max = _nList->at(_nlCount-1).hidden[out];
+                guess = out;
+            }
             cout<<_nList->at(_nlCount-1).hidden[out]<<endl;
         }
-        return;
+        return guess;
     }
     else
     {
         // printArray(list[3].getErrors(),list[3].getOutCount());
         backPropagate();
     }
+    return 0;
 }
 
 void myNeuro::backPropagate()
@@ -126,11 +134,11 @@ void myNeuro::train(float *in, float *targ)
     feedForwarding(true);
 }
 
-void myNeuro::query(float *in)
+int myNeuro::query(float *in)
 {
     _inputs = in;
     //--- bool == false call query NN with print NN output
-    feedForwarding(false);
+    return feedForwarding(false);
 }
 
 void myNeuro::printArray(float *arr, int s)

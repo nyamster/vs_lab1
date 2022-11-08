@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     vector<string> wordList;
     bool ok=true;
         ifstream f;
-        f.open("//home/fmv/work/tmp/simple-neuro-network/mnist_train.csv");
+        f.open("/home/michail/labs/vs_lab1/mnist_train.csv");
         if (f.is_open())
         {
             int qq=0;
@@ -72,7 +72,9 @@ int main(int argc, char *argv[])
 
             f.close();
         }
-        ifstream f2("/home/fmv/work/tmp/simple-neuro-network/mnist_test.csv");
+
+        int sum = 0, correct = 0;
+        ifstream f2("/home/michail/labs/vs_lab1/mnist_test.csv");
         if (f2.is_open())
         {
             while(!f2.eof())
@@ -88,12 +90,20 @@ int main(int argc, char *argv[])
                         wordList.push_back(word);
                 }
                 string str = wordList.at(0);
-                cout<<"__________________\n";
-                cout<<"For number "<<str << "\n";
-                float * tmpIN = inputs_list(wordList);
-                nW->query(tmpIN);
-                delete tmpIN;
-                tmpIN = nullptr;
+                int ans = 0;
+                if (str != "label" && str != "")
+                {
+                    ans = stoi(str);
+                    cout<<"__________________\n";
+                    cout<<"For number "<<str << "\n";
+                    float * tmpIN = inputs_list(wordList);
+                    int guess = nW->query(tmpIN);
+                    if (ans == guess)
+                        correct++;
+                    sum++;
+                    delete tmpIN;
+                    tmpIN = nullptr;
+                }
             }
 
             f2.close();
@@ -101,6 +111,8 @@ int main(int argc, char *argv[])
          delete nW;
         nW = nullptr;
         cout<<"_______________THE____END_______________\n";
+
+        cout << "Guessed: " << correct << ", out of: " << sum << endl;
 
 
 

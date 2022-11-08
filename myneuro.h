@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-#define learnRate 0.5
+#define learnRate 0.1
 #define randWeight (( ((float)rand() / (float)RAND_MAX) - 0.5)* pow(out,-0.5))
 class myNeuro
 {
@@ -115,10 +115,10 @@ public:
            };
     };
 
-    void feedForwarding(bool ok);
+    int feedForwarding(bool ok);
     void backPropagate();
     void train(float *in, float *targ);
-    void query(float *in);
+    int query(float *in);
     void printArray(float *arr,int s);
 
 private:

@@ -5,6 +5,7 @@
 using namespace std;
 
 #define learnRate 0.1
+#define epochs 1
 #define randWeight (( ((float)rand() / (float)RAND_MAX) - 0.5)* pow(out,-0.5))
 class myNeuro
 {
@@ -29,10 +30,10 @@ public:
            void updMatrix(float *enteredVal)
            {
                //--- upd weight with considering errors
-               for(int ou =0; ou < out; ou++)
+               for(int ou = 0; ou < out; ou++)
                {
 
-                   for(int hid =0; hid < in; hid++)
+                   for(int hid = 0; hid < in; hid++)
                    {
                        matrix[hid][ou] += (learnRate * errors[ou] * enteredVal[hid]);
                    }
@@ -115,7 +116,7 @@ public:
            };
     };
 
-    int feedForwarding(bool ok);
+    int feedForwarding();
     void backPropagate();
     void train(float *in, float *targ);
     int query(float *in);

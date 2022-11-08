@@ -64,36 +64,17 @@ myNeuro::~myNeuro()
     }
 }
 
-int myNeuro::feedForwarding(bool ok)
+int myNeuro::feedForwarding()
 {
-    //--- signal through NN in forward direction
-
-    //--- for first layer argument is _inputs
-    _nList->at(0).makeHidden(_inputs);
-   //--- for other layer argument is "hidden" array previous's layer
-    for (int i = 1; i<_nlCount; i++)
-        _nList->at(i).makeHidden(_nList->at(i-1).getHidden());
-
-
-    //--- bool condition for query NN or train NN
-    if (!ok)
+    for (int k = 0; k < epochs; k ++)
     {
-        cout<<"Feed Forward: "<<endl;
-        float max = 0;
-        int guess = 0;
-        for(int out =0; out < _outputNeurons; out++)
-        {
-            if (_nList->at(_nlCount-1).hidden[out] > max)
-            {
-                max = _nList->at(_nlCount-1).hidden[out];
-                guess = out;
-            }
-            cout<<_nList->at(_nlCount-1).hidden[out]<<endl;
-        }
-        return guess;
-    }
-    else
-    {
+        //--- signal through NN in forward direction
+        //--- for first layer argument is _inputs
+        _nList->at(0).makeHidden(_inputs);
+        //--- for other layer argument is "hidden" array previous's layer
+        for (int i = 1; i<_nlCount; i++)
+            _nList->at(i).makeHidden(_nList->at(i-1).getHidden());
+
         // printArray(list[3].getErrors(),list[3].getOutCount());
         backPropagate();
     }
@@ -131,14 +112,33 @@ void myNeuro::train(float *in, float *targ)
     _targets = targ;
 
     //--- bool == true enable backPropogate function, else it's equal query without print
-    feedForwarding(true);
+    feedForwarding();
 }
 
 int myNeuro::query(float *in)
 {
     _inputs = in;
-    //--- bool == false call query NN with print NN output
-    return feedForwarding(false);
+    
+        //--- signal through NN in forward direction
+    //--- for first layer argument is _inputs
+    _nList->at(0).makeHidden(_inputs);
+    //--- for other layer argument is "hidden" array previous's layer
+    for (int i = 1; i<_nlCount; i++)
+        _nList->at(i).makeHidden(_nList->at(i-1).getHidden());
+
+    cout<<"Feed Forward: "<<endl;
+    float max = 0;
+    int guess = 0;
+    for(int out =0; out < _outputNeurons; out++)
+    {
+        if (_nList->at(_nlCount-1).hidden[out] > max)
+        {
+            max = _nList->at(_nlCount-1).hidden[out];
+            guess = out;
+        }
+        cout<<_nList->at(_nlCount-1).hidden[out]<<endl;
+    }
+    return guess;
 }
 
 void myNeuro::printArray(float *arr, int s)
